@@ -14,6 +14,7 @@ from app.models.prediction import Prediction
 from app.models.sensor_data import SensorData
 from app.simulator.generator import SensorGenerator, SensorReading
 from app.simulator.seed import seed_locations
+from app.websocket.manager import manager
 
 
 logger = logging.getLogger(__name__)
@@ -28,6 +29,7 @@ def generate_and_persist_readings(
     generator = generator or SensorGenerator()
     db = session_factory()
     readings: list[SensorReading] = []
+    events: list[dict[str, object]] = []
     try:
         locations = seed_locations(db)
         for location in locations:
@@ -69,7 +71,19 @@ def generate_and_persist_readings(
                     created_at=timestamp,
                 ))
             readings.append(reading)
+            events.append({
+                "timestamp": timestamp.isoformat().replace("+00:00", "Z"),
+                "location": location.name,
+                "rainfall": reading.rainfall,
+                "soil_moisture": reading.soil_moisture,
+                "water_level": reading.water_level,
+                "risk_score": result.risk_score,
+                "risk_level": result.risk_level,
+                "lead_time": result.lead_time,
+            })
         db.commit()
+        for event in events:
+            manager.publish_from_thread(event)
         logger.info("Persisted %d simulated readings", len(readings))
         return readings
     except Exception:

@@ -7,6 +7,7 @@ from fastapi import FastAPI
 
 from app.api import dashboard, health, predict, sensor
 from app.simulator.scheduler import run_scheduler
+from app.websocket.events import router as websocket_router
 
 
 logging.basicConfig(level=logging.INFO)
@@ -36,3 +37,4 @@ app.include_router(health.router)
 app.include_router(dashboard.router)
 app.include_router(sensor.router)
 app.include_router(predict.router)
+app.include_router(websocket_router)
