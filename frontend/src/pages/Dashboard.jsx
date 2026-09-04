@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useJsApiLoader } from '@react-google-maps/api'
+import { useDashboardData } from '../hooks/useDashboardData'
 import Sidebar from '../components/Sidebar'
 import Topbar from '../components/Topbar'
 import MapPanel from '../components/MapPanel'
@@ -8,7 +9,7 @@ import Analytics from '../components/Analytics'
 import Radar from '../components/Radar'
 import MissionCard from '../components/MissionCard'
 
-const libraries = ['places', 'geometry']
+const libraries = ['places', 'geometry', 'marker']
 const DEFAULT_PLACE = { name: 'Central India flood belt', location: { lat: 20.5937, lng: 78.9629 } }
 
 function Dashboard() {
@@ -24,7 +25,8 @@ function MapsEnabledDashboard({ apiKey }) {
 }
 
 function DashboardContent({ place, mapsLoaded, onPlaceSelected }) {
-  return <div className="app-shell"><Sidebar /><main className="main-content"><Topbar mapsLoaded={mapsLoaded} onPlaceSelected={onPlaceSelected} /><MapPanel place={place} mapsLoaded={mapsLoaded} /><Radar /><MissionCard place={place} /><AlertsPanel place={place} /><Analytics place={place} /></main></div>
+  const liveData = useDashboardData(place)
+  return <div className="app-shell"><Sidebar /><main className="main-content"><Topbar mapsLoaded={mapsLoaded} onPlaceSelected={onPlaceSelected} /><MapPanel place={place} mapsLoaded={mapsLoaded} liveData={liveData} /><Radar /><MissionCard place={place} /><AlertsPanel place={place} liveData={liveData} /><Analytics place={place} liveData={liveData} /></main></div>
 }
 
 export default Dashboard
