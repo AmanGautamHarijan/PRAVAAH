@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 
+from app.api import dashboard, health, predict, sensor
+
 
 app = FastAPI(
     title="PRAVAAH Backend",
@@ -8,6 +10,7 @@ app = FastAPI(
 )
 
 
-@app.get("/health")
-def health_check() -> dict[str, str]:
-    return {"status": "healthy"}
+app.include_router(health.router)
+app.include_router(dashboard.router)
+app.include_router(sensor.router)
+app.include_router(predict.router)
