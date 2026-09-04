@@ -23,3 +23,27 @@ body { background: #0f1115; }
 @media (max-width: 470px) { .map-mode-controls { top: 132px; }.radar-card,.mission-card,.alerts-panel,.analytics { position: relative; left: auto; right: auto; bottom: auto; top: auto; width: 100%; margin-top: 14px; }.map-panel { min-height: 430px; }.analytics { min-height: 0; }.metric-grid { grid-template-columns: 1fr 1fr; } }
 .gm-style .gm-info { min-width: 230px; padding: 4px 2px 2px; color: #e5e7e6; background: #171a1e; font-family: 'Manrope', sans-serif; }.gm-style .gm-info-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }.gm-style .gm-info-head strong { font-size: 15px; line-height: 1.25; }.gm-style .gm-risk { padding: 3px 6px; border-radius: 3px; background: #552b2c; color: #e88c7d; font: 500 9px 'DM Mono', monospace; }.gm-style .gm-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 12px; padding: 10px 0; border-top: 1px solid #42484c; border-bottom: 1px solid #42484c; }.gm-style .gm-info-grid span { color: #969fa3; font-size: 9px; }.gm-style .gm-info-grid b { display: block; margin-top: 3px; color: #f0f1ef; font: 500 13px 'DM Mono', monospace; }.gm-style .gm-info p { margin: 10px 0 0; color: #c1c5c5; font-size: 10px; line-height: 1.4; }.arrival-bounce { animation: markerArrival .55s cubic-bezier(.2,.8,.3,1); }
 @keyframes markerArrival { 0% { transform: translateY(-16px); } 65% { transform: translateY(2px); } 100% { transform: translateY(0); } }
+
+.places-search { position: relative; min-width: 0; }
+.place-suggestions { position: absolute; z-index: 50; top: calc(100% + 7px); left: 0; width: min(390px, calc(100vw - 28px)); max-height: min(320px, 55vh); margin: 0; padding: 5px; overflow-y: auto; list-style: none; border: 1px solid #4b5259; border-radius: 8px; background: #171a1ef8; box-shadow: 0 18px 36px #00000088; }
+.place-suggestions button { display: grid; width: 100%; gap: 3px; padding: 10px 12px; border: 0; border-radius: 5px; color: #e7e9e8; background: transparent; text-align: left; }
+.place-suggestions button:hover,.place-suggestions button.active { background: #30373d; }
+.place-suggestions strong,.place-suggestions span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.place-suggestions strong { font-size: 12px; }
+.place-suggestions span { color: #9ca4a7; font-size: 11px; }
+.places-loading { position: absolute; z-index: 51; top: calc(100% + 8px); right: 8px; color: #9ca4a7; font: 10px 'DM Mono', monospace; pointer-events: none; }
+.mission-location { display: grid; gap: 3px; margin-top: 13px; padding: 9px 0; border-top: 1px solid #3c4349; border-bottom: 1px solid #3c4349; }
+.mission-location span { overflow: hidden; color: #e3e6e5; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.mission-location small { color: #9ea6a8; font: 10px 'DM Mono', monospace; }
+
+/* Places suggestions retain the existing EOC control palette while remaining usable by keyboard and touch. */
+.places-search { position: relative; min-width: 250px; }
+.place-suggestions { position: absolute; z-index: 40; top: calc(100% + 6px); right: 0; left: 0; max-height: min(320px, 55vh); margin: 0; padding: 5px; overflow-y: auto; list-style: none; border: 1px solid #454c52; border-radius: 7px; background: #191c20; box-shadow: 0 16px 34px #00000080; }
+.place-suggestions button { display: grid; width: 100%; gap: 3px; padding: 10px 11px; border: 0; border-radius: 4px; color: #e7e9e8; background: transparent; text-align: left; cursor: pointer; }
+.place-suggestions button:hover,.place-suggestions button.active { background: #35414a; }
+.place-suggestions strong,.place-suggestions span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.place-suggestions strong { font-size: 12px; }.place-suggestions span { color: #aab0b2; font-size: 10px; }
+.places-loading { position: absolute; z-index: 41; top: 12px; right: 30px; color: #aab0b2; font-size: 10px; pointer-events: none; }
+.mission-location { display: grid; gap: 3px; margin: 12px 0; padding: 8px 0; border-top: 1px solid #3c4349; border-bottom: 1px solid #3c4349; }
+.mission-location span { overflow: hidden; color: #dfe3e1; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }.mission-location small { color: #9da4a7; font: 10px 'DM Mono', monospace; }
+@media (max-width: 760px) { .places-search { min-width: 155px; } }
