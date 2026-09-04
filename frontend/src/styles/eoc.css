@@ -47,3 +47,96 @@ body { background: #0f1115; }
 .mission-location { display: grid; gap: 3px; margin: 12px 0; padding: 8px 0; border-top: 1px solid #3c4349; border-bottom: 1px solid #3c4349; }
 .mission-location span { overflow: hidden; color: #dfe3e1; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }.mission-location small { color: #9da4a7; font: 10px 'DM Mono', monospace; }
 @media (max-width: 760px) { .places-search { min-width: 155px; } }
+
+/* EOC readability and panel layering. */
+:root {
+  --type-hero: clamp(2.5rem, 2.5vw, 3rem);
+  --type-section: clamp(1.75rem, 1.45vw, 2rem);
+  --type-metric: clamp(2rem, 1.7vw, 2.25rem);
+  --type-label: clamp(.875rem, .72rem + .2vw, .9375rem);
+  --type-control: clamp(.875rem, .78rem + .16vw, .9375rem);
+}
+
+.topbar-brand strong { font-size: clamp(1rem, .9rem + .25vw, 1.125rem); }
+.topbar-brand span,.section-kicker,.map-status { font-size: var(--type-label); }
+.search-box,.search-box input,.date-control,.icon-button,.live-chip,.map-mode-controls button,.map-action-controls button { font-size: var(--type-control); }
+.map-panel { height: clamp(580px, calc(100vh - 148px), 620px); min-height: 580px; }
+.map-heading { top: 28px; left: 30px; right: 30px; }
+.map-panel h2 { font-size: var(--type-hero); line-height: 1.06; }
+.alerts-panel h2,.analytics h2,.mission-card h2,.radar-copy h2 { font-size: var(--type-section); line-height: 1.12; }
+.map-heading,.alerts-panel,.radar-card,.analytics { z-index: 4; }
+
+/* The Mission Card now belongs to the map stacking context instead of competing with Analytics. */
+.map-panel > .mission-card { z-index: 7; left: clamp(340px, 30vw, 462px); right: auto; bottom: clamp(152px, 20vh, 178px); width: clamp(310px, 25vw, 350px); padding: clamp(18px, 1.3vw, 24px); }
+.mission-card p { font-size: var(--type-label); line-height: 1.55; }
+.mission-location { margin: 14px 0; padding: 10px 0; }
+.mission-location span,.mission-location small,.mission-stats { font-size: var(--type-label); }
+.mission-stats { gap: 15px; margin-top: 20px; padding-top: 15px; }
+.mission-stats strong { font-size: clamp(1rem, .85rem + .3vw, 1.125rem); }
+.mission-action { font-size: var(--type-control); }
+
+.analytics { padding: clamp(20px, 1.5vw, 26px); }
+.metric-grid { gap: clamp(12px, 1vw, 18px); margin-top: 18px; }
+.metric,.trend-card { min-height: 112px; padding: clamp(14px, 1.1vw, 18px); }
+.metric-icon { width: 30px; height: 30px; margin-bottom: 9px; }
+.metric > span,.trend-card > div > span { font-size: var(--type-label); }
+.metric strong { margin: 8px 0 5px; font-size: var(--type-metric); line-height: 1; }
+.metric small { font-size: var(--type-label); }
+.trend-card strong { font-size: var(--type-metric); }
+
+@media (max-width: 1100px) and (min-width: 761px) {
+  .map-panel > .mission-card { left: 50%; right: 28px; width: calc(50% - 42px); }
+}
+
+@media (max-width: 760px) {
+  :root { --type-hero: clamp(2rem, 9vw, 2.5rem); --type-section: clamp(1.5rem, 6vw, 1.875rem); }
+  .map-panel { height: 630px; min-height: 630px; }
+  .map-panel > .mission-card { left: 50%; right: 20px; bottom: 140px; width: calc(50% - 30px); }
+  .metric,.trend-card { min-height: 104px; }
+}
+
+@media (max-width: 470px) {
+  .map-panel { height: 660px; min-height: 660px; }
+  .map-panel > .mission-card { position: absolute; left: 14px; right: 14px; bottom: 56px; width: auto; margin: 0; }
+}
+
+/* Hero-only polish: reserve the upper-right lane for map controls and alerts. */
+:root {
+  --type-control: clamp(.9375rem, .86rem + .18vw, 1rem);
+  --type-mission-title: clamp(1.125rem, 1rem + .35vw, 1.25rem);
+  --type-mission-body: clamp(.9375rem, .85rem + .25vw, 1rem);
+}
+
+.map-heading .section-kicker { font-size: clamp(1.125rem, 1.05rem + .2vw, 1.25rem); }
+.map-panel > .mission-card { left: 32px; bottom: clamp(148px, 19vh, 172px); width: clamp(320px, 24vw, 350px); }
+.mission-card h2 { font-size: var(--type-mission-title); }
+.mission-card p { font-size: var(--type-mission-body); }
+.mission-card { padding: clamp(22px, 1.5vw, 26px); }
+
+.map-mode-controls { top: 28px; right: 372px; gap: 6px; padding: 5px; }
+.map-mode-controls button { padding: 9px 10px; }
+.alerts-panel { top: 116px; right: 48px; }
+.alert-summary strong,.alert-summary span,.alert-copy strong,.alert-copy p,.alert-copy small,.selected-place { font-size: var(--type-label); }
+
+.gm-style .gm-info { min-width: 280px; padding: 12px 10px 10px; }
+.gm-style .gm-info-head strong { font-size: clamp(1rem, .9rem + .2vw, 1.125rem); }
+.gm-style .gm-info-grid { gap: 12px; margin-top: 14px; padding: 12px 0; }
+.gm-style .gm-info-grid span,.gm-style .gm-info p { font-size: var(--type-label); }
+.gm-style .gm-info-grid b { font-size: clamp(1rem, .9rem + .2vw, 1.125rem); }
+
+@media (max-width: 1100px) {
+  .map-mode-controls { right: 24px; }
+  .alerts-panel { top: 140px; }
+  .map-panel > .mission-card { left: 32px; right: auto; width: clamp(300px, 42vw, 350px); }
+}
+
+@media (max-width: 760px) {
+  .map-heading .section-kicker { font-size: var(--type-label); }
+  .map-mode-controls { top: 104px; right: 12px; left: 12px; }
+  .alerts-panel { top: 174px; }
+  .map-panel > .mission-card { left: 20px; right: auto; bottom: 132px; width: calc(50% - 30px); }
+}
+
+@media (max-width: 470px) {
+  .map-panel > .mission-card { left: 14px; right: 14px; bottom: 56px; width: auto; }
+}

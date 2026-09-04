@@ -6,7 +6,6 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
-from app.models.location import Location
 from app.models.sensor_data import SensorData
 
 
@@ -36,10 +35,6 @@ def create_sensor_data(
     payload: SensorDataCreate,
     db: Session = Depends(get_db),
 ) -> dict[str, str]:
-    location_exists = db.scalar(select(Location.id).where(Location.id == payload.location_id))
-    if location_exists is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Location not found")
-
     sensor_data = SensorData(
         location_id=payload.location_id,
         rainfall=payload.rainfall,

@@ -1,6 +1,7 @@
 import { useJsApiLoader } from '@react-google-maps/api'
 import { useDashboardData } from '../hooks/useDashboardData'
 import { useSelectedLocation } from '../hooks/useSelectedLocation'
+import { useWeather } from '../hooks/useWeather'
 import Sidebar from '../components/Sidebar'
 import Topbar from '../components/Topbar'
 import MapPanel from '../components/MapPanel'
@@ -26,7 +27,8 @@ function MapsEnabledDashboard({ apiKey }) {
 
 function DashboardContent({ selectedLocation, mapsLoaded, onLocationSelected, onCoordinatesSelected }) {
   const liveData = useDashboardData(selectedLocation)
-  return <div className="app-shell"><Sidebar /><main className="main-content"><Topbar mapsLoaded={mapsLoaded} selectedLocation={selectedLocation} onLocationSelected={onLocationSelected} /><MapPanel place={selectedLocation} mapsLoaded={mapsLoaded} liveData={liveData} onCoordinatesSelected={onCoordinatesSelected} /><Radar /><MissionCard place={selectedLocation} /><AlertsPanel place={selectedLocation} liveData={liveData} /><Analytics place={selectedLocation} liveData={liveData} /></main></div>
+  const weather = useWeather(selectedLocation)
+  return <div className="app-shell"><Sidebar /><main className="main-content"><Topbar mapsLoaded={mapsLoaded} selectedLocation={selectedLocation} onLocationSelected={onLocationSelected} /><MapPanel place={selectedLocation} mapsLoaded={mapsLoaded} liveData={liveData} onCoordinatesSelected={onCoordinatesSelected} missionCard={<MissionCard place={selectedLocation} />} /><Radar /><AlertsPanel place={selectedLocation} liveData={liveData} /><Analytics place={selectedLocation} liveData={liveData} weather={weather} /></main></div>
 }
 
 export default Dashboard

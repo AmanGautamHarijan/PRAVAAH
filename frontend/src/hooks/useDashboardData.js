@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react'
-import { DEFAULT_ALERTS, getAlerts, getLatestSensor, getSummary } from '../services/dashboardApi'
-import { requestPrediction } from '../services/predictionApi'
-import { connectLiveSocket } from '../services/websocket'
+import { DEFAULT_ALERTS, getLatestSensor, getSummary } from '../services/dashboardApi'
 
+const POLL_INTERVAL_MS = 5000
 const EMPTY = {
   summary: { overall_risk: 'CRITICAL', affected_villages: 3, population_at_risk: 12840, lead_time: 75, active_alerts: 2 },
   sensor: null,
   prediction: null,
   alerts: DEFAULT_ALERTS,
   connected: false,
+  loading: true,
+  error: null,
 }
 
 export function useDashboardData(place) {
@@ -16,25 +17,31 @@ export function useDashboardData(place) {
 
   useEffect(() => {
     let mounted = true
-    Promise.all([getLatestSensor(), getSummary(), getAlerts()]).then(async ([sensor, summary, alerts]) => {
-      if (!mounted) return
-      let prediction = null
-      try { prediction = await requestPrediction(sensor) } catch { prediction = null }
-      if (mounted) setData((current) => ({ ...current, sensor, summary, alerts, prediction }))
-    }).catch(() => {})
-    return () => { mounted = false }
-  }, [place])
+    const refreshDashboard = async () => {
+      try {
+        const [summary, sensor] = await Promise.all([getSummary(), getLatestSensor()])
+        if (!mounted) return
+        setData((current) => ({
+          ...current,
+          summary,
+          sensor,
+          prediction: { risk_level: summary.overall_risk },
+          connected: true,
+          loading: false,
+          error: null,
+        }))
+      } catch (error) {
+        if (mounted) setData((current) => ({ ...current, connected: false, loading: false, error }))
+      }
+    }
 
-  useEffect(() => {
-    return connectLiveSocket({
-      onOpen: () => setData((current) => ({ ...current, connected: true })),
-      onMessage: (event) => {
-        const sensor = JSON.parse(event.data)
-        setData((current) => ({ ...current, sensor: { ...sensor, location_id: sensor.location_id || sensor.location }, connected: true }))
-      },
-      onClose: () => setData((current) => ({ ...current, connected: false })),
-    })
-  }, [])
+    refreshDashboard()
+    const intervalId = window.setInterval(refreshDashboard, POLL_INTERVAL_MS)
+    return () => {
+      mounted = false
+      window.clearInterval(intervalId)
+    }
+  }, [place])
 
   return data
 }
