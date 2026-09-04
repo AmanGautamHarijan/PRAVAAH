@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { DEFAULT_ALERTS, getLatestSensor, getSummary } from '../services/dashboardApi'
+import { requestPrediction } from '../services/predictionApi'
 
 const POLL_INTERVAL_MS = 5000
 const EMPTY = {
@@ -12,6 +13,10 @@ const EMPTY = {
   error: null,
 }
 
+function selectedLocationId({ latitude, longitude }) {
+  return `place:${latitude.toFixed(5)},${longitude.toFixed(5)}`
+}
+
 export function useDashboardData(place) {
   const [data, setData] = useState(EMPTY)
 
@@ -20,12 +25,18 @@ export function useDashboardData(place) {
     const refreshDashboard = async () => {
       try {
         const [summary, sensor] = await Promise.all([getSummary(), getLatestSensor()])
+        let prediction = null
+        try {
+          prediction = await requestPrediction({ ...sensor, location_id: selectedLocationId(place) })
+        } catch {
+          prediction = null
+        }
         if (!mounted) return
         setData((current) => ({
           ...current,
-          summary,
+          summary: prediction ? { ...summary, overall_risk: prediction.risk_level, lead_time: prediction.lead_time } : summary,
           sensor,
-          prediction: { risk_level: summary.overall_risk },
+          prediction,
           connected: true,
           loading: false,
           error: null,
