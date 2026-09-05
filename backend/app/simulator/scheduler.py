@@ -12,8 +12,9 @@ from app.ml.predictor import prediction_service
 from app.models.alert import Alert
 from app.models.prediction import Prediction
 from app.models.sensor_data import SensorData
-from app.simulator.generator import SensorGenerator, SensorReading
+from app.simulator.generator import SensorGenerator, SensorReading, Scenario
 from app.simulator.seed import seed_locations
+from app.simulator.state import get_simulator_state
 from app.websocket.manager import manager
 
 
@@ -96,7 +97,7 @@ def generate_and_persist_readings(
 
 async def run_scheduler(
     session_factory: SessionFactory = SessionLocal,
-    interval_seconds: float = 3.0,
+    interval_seconds: float = 5.0,
 ) -> None:
     """Run simulator cycles until cancelled during application shutdown."""
     generator = SensorGenerator()
@@ -104,7 +105,17 @@ async def run_scheduler(
     try:
         while True:
             try:
-                await asyncio.to_thread(generate_and_persist_readings, session_factory, generator)
+                state = get_simulator_state()
+                if state.is_running:
+                    # Update generator scenario if needed
+                    current_scenario = Scenario(state.scenario.value)
+                    if generator.scenario != current_scenario:
+                        generator.set_scenario(current_scenario)
+                    
+                    # Generate and persist readings
+                    await asyncio.to_thread(generate_and_persist_readings, session_factory, generator)
+                else:
+                    logger.debug("Simulator is paused")
             except Exception:
                 logger.warning("Sensor simulator will retry on the next cycle")
             await asyncio.sleep(interval_seconds)
