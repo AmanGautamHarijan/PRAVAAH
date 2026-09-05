@@ -1,4 +1,3 @@
-
 :root { color: #e4e5e6; background: #0f1115; }
 body { background: #0f1115; }
 .app-shell { background: #0f1115; }
@@ -75,14 +74,17 @@ body { background: #0f1115; }
 .mission-stats strong { font-size: clamp(1rem, .85rem + .3vw, 1.125rem); }
 .mission-action { font-size: var(--type-control); }
 
-.analytics { padding: clamp(20px, 1.5vw, 26px); }
-.metric-grid { gap: clamp(12px, 1vw, 18px); margin-top: 18px; }
-.metric,.trend-card { min-height: 112px; padding: clamp(14px, 1.1vw, 18px); }
-.metric-icon { width: 30px; height: 30px; margin-bottom: 9px; }
+/* Shrunk from the previous readability pass: the panel was tall enough to
+   crowd the mission card sitting right above it on the map. */
+.analytics { min-height: 0; padding: clamp(14px, 1.1vw, 18px); }
+.analytics h2 { font-size: clamp(1.25rem, 1.1rem + .3vw, 1.5rem); }
+.metric-grid { gap: clamp(8px, .7vw, 12px); margin-top: 12px; }
+.metric,.trend-card { min-height: 78px; padding: clamp(10px, .8vw, 13px); }
+.metric-icon { width: 24px; height: 24px; margin-bottom: 6px; }
 .metric > span,.trend-card > div > span { font-size: var(--type-label); }
-.metric strong { margin: 8px 0 5px; font-size: var(--type-metric); line-height: 1; }
+.metric strong { margin: 5px 0 3px; font-size: clamp(1.25rem, 1.1rem + .3vw, 1.5rem); line-height: 1; }
 .metric small { font-size: var(--type-label); }
-.trend-card strong { font-size: var(--type-metric); }
+.trend-card strong { font-size: clamp(1.25rem, 1.1rem + .3vw, 1.5rem); }
 
 @media (max-width: 1100px) and (min-width: 761px) {
   .map-panel > .mission-card { left: 50%; right: 28px; width: calc(50% - 42px); }
