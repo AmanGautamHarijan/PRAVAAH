@@ -59,7 +59,7 @@ Frontend: `http://localhost:5173`
 
 ``` env
 VITE_GOOGLE_MAPS_API_KEY=YOUR_API_KEY
-VITE_GOOGLE_MAP_ID=YOUR_MAP_ID
+VITE_GOOGLE_MAPS_MAP_ID=YOUR_MAP_ID
 ```
 
 ## Git Workflow
