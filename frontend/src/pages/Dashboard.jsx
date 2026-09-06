@@ -13,6 +13,7 @@ import Radar from '../components/Radar'
 import MissionCard from '../components/MissionCard'
 import IncidentTimeline from '../components/IncidentTimeline'
 import SimulatorControls from '../components/SimulatorControls'
+import ResponsePanel from '../components/ResponsePanel'
 
 const libraries = ['places', 'geometry', 'marker']
 const DEFAULT_PLACE = { name: 'Central India flood belt', latitude: 20.5937, longitude: 78.9629, location: { lat: 20.5937, lng: 78.9629 } }
@@ -31,6 +32,7 @@ function MapsEnabledDashboard({ apiKey }) {
 
 function DashboardContent({ selectedLocation, mapsLoaded, onLocationSelected, onCoordinatesSelected }) {
   const [activeAlertId, setActiveAlertId] = useState(null)
+  const [responsePanelOpen, setResponsePanelOpen] = useState(false)
   const liveData = useDashboardData(selectedLocation)
   const weather = useWeather(selectedLocation)
   const activeAlert = liveData.alerts.find((alert) => alert.id === activeAlertId) || null
@@ -45,12 +47,13 @@ function DashboardContent({ selectedLocation, mapsLoaded, onLocationSelected, on
     <main className="main-content">
       <Topbar mapsLoaded={mapsLoaded} selectedLocation={selectedLocation} onLocationSelected={onLocationSelected} />
       <SimulatorControls />
-      <MapPanel place={selectedLocation} mapsLoaded={mapsLoaded} liveData={liveData} onCoordinatesSelected={onCoordinatesSelected} activeAlertId={activeAlertId} missionCard={<MissionCard place={selectedLocation} prediction={liveData.prediction} alert={activeAlert} />} />
+      <MapPanel place={selectedLocation} mapsLoaded={mapsLoaded} liveData={liveData} onCoordinatesSelected={onCoordinatesSelected} activeAlertId={activeAlertId} missionCard={<MissionCard place={selectedLocation} prediction={liveData.prediction} alert={activeAlert} onOpenResponsePlan={() => setResponsePanelOpen(true)} />} />
       <Radar />
       <AlertsPanel place={selectedLocation} liveData={liveData} activeAlertId={activeAlertId} onAlertSelected={selectAlert} />
       <Analytics place={selectedLocation} liveData={liveData} weather={weather} />
       <IncidentTimeline events={events} onEventSelected={selectTimelineEvent} />
     </main>
+    <ResponsePanel isOpen={responsePanelOpen} onClose={() => setResponsePanelOpen(false)} place={selectedLocation} />
   </div>
 }
 
