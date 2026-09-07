@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import dashboard, health, predict, sensor, simulator
+from app.api import dashboard, health, predict, response, sensor, simulator
 from app.simulator.scheduler import run_scheduler
 from app.simulator.state import DisasterScenario, get_simulator_state
 from app.websocket.events import router as websocket_router
@@ -57,4 +57,5 @@ app.include_router(dashboard.router)
 app.include_router(sensor.router)
 app.include_router(predict.router)
 app.include_router(simulator.router)
+app.include_router(response.router)
 app.include_router(websocket_router)
