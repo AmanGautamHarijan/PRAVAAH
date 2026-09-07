@@ -138,7 +138,7 @@ python -m venv .venv
 
 pip install -r requirements.txt
 
-uvicorn main:app --reload
+uvicorn app.main:app --reload
 ```
 
 Backend runs at:
